@@ -1,6 +1,4 @@
 ## Design and Implementation of a Virtual Memory Unit (MMU)
-**Out:** March 20, 2021, at 10:00am   
-**Due:** April 11, 2021, at 09:00pm
 
 This project consists of writing a program that translates logical to physical addresses for a virtual address space of 
 size 2<sup>16</sup> = 65,536 bytes. Your program will read from a file containing logical addresses and, using a TLB and a page 
@@ -40,7 +38,7 @@ number is obtained from the TLB. In the case of a TLB miss, the page table must 
 the frame number is obtained from the page table, or a page fault occurs. A visual representation of the address-translation 
 process is:
 
-<img src="./figs/vmm.png" alt="alt text" width="800">
+<img src="vmm.png" alt="alt text" width="800">
 
 
 #### Handling Page Faults
@@ -60,7 +58,7 @@ of the virtual address space, i.e., 65,536 bytes, so you do not need to be conce
 #### How to Begin
 First, write a simple program that extracts the page number and offset based on:
 
-<img src="./figs/address.png" alt="alt text" width="500">
+<img src="address.png" alt="alt text" width="500">
 
 from the following integer numbers: 
 ```
@@ -82,62 +80,3 @@ assumes using a smaller physical address space with 128 page frames rather than 
 2<sup>7</sup> valid entries in the page table (i.e., 128 pages). This change will require modifying 
 your program so that it keeps track of free page frames as well as implementing a page-replacement policy using 
 LRU (Section 10.4) to resolve page faults when there is no free memory.
-
-
-### How should Your Project Work
-Your program should read in the file `addresses.txt`, 
-which contains 1,000 logical addresses ranging from 0 to 65535. 
-Your program is to translate each logical address to a physical address and determine the contents of the signed byte 
-stored at the correct physical address. (Recall that in the C language, the char data type occupies a byte of storage, so we suggest using char values.)
-
-Your program is to output a comma-separated values (csv) file that has three columns:
-
-* Column 1: the logical address being translated (the integer value being read from `addresses.txt`).
-* Column 2: the corresponding physical address (what your program translates the logical address to).
-* Column 3: the signed byte value stored in physical memory at the translated physical address.
-
-### Statistics 
-After completion, your program is to report the following statistics for both phase 1 and 2 at the end of the `csv` files:
-1. Page-fault rate: the percentage of address references that resulted in page faults.
-2. TLB hit rate: the percentage of address references that were resolved in the TLB.
-
-Please check the end of file `correct256.csv` to see the correct format for reporting the statistics. 
-Since the logical addresses in `addresses.txt` were generated randomly and do not reflect any memory access locality, 
-do not expect to have a high TLB hit rate.
-
-### How to Test Your Project
-We provided the file `addresses.txt`, which contains integer values representing logical addresses ranging from 0 to 65535 
-(the size of the virtual address space). Your program will open this file, read each logical address and translate it to 
-its corresponding physical address, and output the value of the signed byte at the physical address. The file `correct256.csv` 
-is the correct output for `addresses.txt` for phase 1 of this project. You first need to complete the `Makefile` and then modify/use 
-`test.sh` script to test your project. 
-
-### Deliverables
-Submit a zip file, `project3.zip`, containing all files that are required to build and run your project, including:
-
-    1) Makefile
-    2) All C source or header files
-    3) BACKING_STORE.bin
-    4) addresses.txt
-    5) test.sh
-    6) correct256.csv
-
-Please do not submit object files (*.o) or compiled executables.
-
-### Grading 
-The TAs will use `test.sh` bash script to grade your project. As can be seen in this file, we first `make` your project using your submitted `Makefile`. Then for phase 1 we run: 
-
-    ./mmu 256 BACKING_STORE.bin addresses.txt
-
-in which, your executable, i.e.,__mmu__, will be given 3 parameters: 256 as the size of the physical memory, `BACKING_STORE.bin` and `addresses.txt`, which contains the logical input addresses. At this phase, your program should create a file called  `output256.csv`, which will be compared against the `correct256.csv`. For phase 2, we change the size of the physical memory to 128. Here, your program should create a file called `output128.csv`. 
-
-__Note__: The grading has been automated using the file `test.sh`, so even having one incorrect line in the `csv` files will result in 0. For statistics, you should set the floating point precision to 2. 
-
-
-| Item           | Point   | 
-| :------------- |:-------------:|
-| Correct `output256.csv` file for no page replacement       | 6 |
-| Correct statistics for no page replacement                 | 2 |
-| Correct `output128.csv` file for page replacement          | 9 |
-| Correct statistics for page replacement                    | 3 |
-| **Sum** | **20** |
